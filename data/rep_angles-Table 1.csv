@@ -1,0 +1,12 @@
+index,label,required_cv_joints,angle_joint_1,angle_joint_1_a,angle_joint_1_b,angle_joint_1_c,joint_1_stage_1,joint_1_stage_2,joint_1_stage_3,offset_range,feedback_points
+0,barbell biceps curl,"SHOULDER,ELBOW,WRIST",ELBOW,SHOULDER,ELBOW,WRIST,x>160,30<x<160,30>x,,"shoulder_over_hips, elbow_tucked_in_front"
+3,deadlift,"SHOULDER,HIP,KNEE",HIP,SHOULDER,HIP,KNEE,x>160,100<x<160,100>x,,shoulder_over_ankle
+5,hammer curl,"SHOULDER,ELBOW,WRIST",ELBOW,SHOULDER,ELBOW,WRIST,x>160,30<x<160,30>x,,"shoulder_over_hips, elbow_tucked_in_front"
+9,lateral raises,"SHOULDER,WRIST,HIP",SHOULDER,WRIST,SHOULDER,HIP,20>x,20<x<80,x>80,>30,shoulder_over_hips
+11,leg raises,"HIP,ANKLE,SHOULDER",HIP,SHOULDER,HIP,ANKLE,x>160,80<x<160,80>x,,"legs_in_front, arms_straight"
+13,pull up,"WRIST,ELBOW,SHOULDER",ELBOW,SHOULDER,ELBOW,WRIST,x>160,30<x<160,30>x,<30,straight_body
+14,push up,"SHOULDER,ELBOW,WRIST,HIP",ELBOW,SHOULDER,ELBOW,WRIST,x>160,45<x<160,45>x,<30,straight_body
+15,romanian deadlift,"SHOULDER,HIP,KNEE",HIP,SHOULDER,HIP,KNEE,x>160,100<x<160,100>x,<30,slight_knee_bend
+17,shoulder press,"SHOULDER,ELBOW,WRIST,HIP",SHOULDER,ELBOW,SHOULDER,HIP,40>x,40<x<160,x>160,,
+18,squat,"HIP,KNEE,ANKLE",KNEE,HIP,KNEE,ANKLE,x>160,50<x<160,50>x,<30,shoulder_over_ankle
+20,tricep dips,"SHOULDER,ELBOW,WRIST",ELBOW,SHOULDER,ELBOW,WRIST,x>160,80>x>169,80>x,<30,

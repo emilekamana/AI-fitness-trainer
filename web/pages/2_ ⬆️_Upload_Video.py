@@ -1,0 +1,234 @@
+# import av
+# import os
+# import sys
+# import streamlit as st
+# import cv2
+# from PIL import Image
+# import tempfile
+
+
+# BASE_DIR = os.path.abspath(os.path.join(__file__, '../../'))
+# sys.path.append(BASE_DIR)
+
+
+# from utils import get_mediapipe_pose, get_joint_csv_data
+# from process_frame import ProcessFrame
+
+
+
+# st.title('AI Fitness Trainer: Exercise Analysis')
+
+
+
+# data = get_joint_csv_data() 
+
+
+
+
+# upload_process_frame = ProcessFrame(data=data)
+
+# # Initialize face mesh solution
+# pose = get_mediapipe_pose()
+
+
+# download = None
+
+# if 'download' not in st.session_state:
+#     st.session_state['download'] = False
+
+
+# output_video_file = f'output_recorded.mp4'
+
+# if os.path.exists(output_video_file):
+#     os.remove(output_video_file)
+
+
+# with st.form('Upload', clear_on_submit=True):
+#     up_file = st.file_uploader("Upload a Video", ['mp4','mov', 'avi'])
+#     uploaded = st.form_submit_button("Upload")
+
+# stframe = st.empty()
+
+# ip_vid_str = '<p style="font-family:Helvetica; font-weight: bold; font-size: 16px;">Input Video</p>'
+# warning_str = '<p style="font-family:Helvetica; font-weight: bold; color: Red; font-size: 17px;">Please Upload a Video first!!!</p>'
+
+# warn = st.empty()
+
+
+# download_button = st.empty()
+
+# if up_file and uploaded:
+    
+#     download_button.empty()
+#     tfile = tempfile.NamedTemporaryFile(delete=False)
+
+#     try:
+#         warn.empty()
+#         tfile.write(up_file.read())
+
+#         vf = cv2.VideoCapture(tfile.name)
+
+#         # ---------------------  Write the processed video frame. --------------------
+#         fps = int(vf.get(cv2.CAP_PROP_FPS))
+#         width = int(vf.get(cv2.CAP_PROP_FRAME_WIDTH))
+#         height = int(vf.get(cv2.CAP_PROP_FRAME_HEIGHT))
+#         frame_size = (width, height)
+#         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+#         video_output = cv2.VideoWriter(output_video_file, fourcc, fps, frame_size)
+#         # -----------------------------------------------------------------------------
+
+        
+#         txt = st.sidebar.markdown(ip_vid_str, unsafe_allow_html=True)   
+#         ip_video = st.sidebar.video(tfile.name) 
+
+#         while vf.isOpened():
+#             ret, frame = vf.read()
+#             if not ret:
+#                 break
+
+#             # convert frame from BGR to RGB before processing it.
+#             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#             out_frame, _ = upload_process_frame.process(frame, pose)
+#             stframe.image(out_frame)
+#             video_output.write(out_frame[...,::-1])
+
+        
+#         vf.release()
+#         video_output.release()
+#         stframe.empty()
+#         ip_video.empty()
+#         txt.empty()
+#         tfile.close()
+
+    
+#     except AttributeError:
+#         warn.markdown(warning_str, unsafe_allow_html=True)   
+
+
+
+# if os.path.exists(output_video_file):
+#     with open(output_video_file, 'rb') as op_vid:
+#         download = download_button.download_button('Download Video', data = op_vid, file_name='output_recorded.mp4')
+    
+#     if download:
+#         st.session_state['download'] = True
+
+
+
+# if os.path.exists(output_video_file) and st.session_state['download']:
+#     os.remove(output_video_file)
+#     st.session_state['download'] = False
+#     download_button.empty()
+
+
+    
+    
+
+import os
+import sys
+import streamlit as st
+import mediapipe as mp
+import cv2
+import tempfile
+import numpy as np
+from videoreader import VideoReader
+# from utils import process_video
+
+from utils import get_mediapipe_pose, get_joint_csv_data
+from process_frame import ProcessFrame
+
+angle_data, form_data = get_joint_csv_data() 
+
+pose=get_mediapipe_pose()
+
+download = None
+
+if 'download' not in st.session_state:
+    st.session_state['download'] = False
+
+st.title('AI Fitness Trainer: Exercise Analysis')
+
+output_video_file = f'output_recorded.mp4'
+
+stframe = st.empty()
+
+if os.path.exists(output_video_file):
+    os.remove(output_video_file)
+
+# Upload video through Streamlit
+with st.form('Upload', clear_on_submit=True):
+    uploaded_file = st.file_uploader("Upload a video of type mp4, mov, avi", type=['mp4','mov', 'avi'])
+    uploaded = st.form_submit_button("Upload")
+
+stframe = st.empty()
+
+ip_vid_str = '<p style="font-family:Helvetica; font-weight: bold; font-size: 16px;">Input Video</p>'
+
+download_button = st.empty()
+
+if uploaded_file and uploaded:
+    download_button.empty()
+    tfile = tempfile.NamedTemporaryFile(delete=False)
+    try:
+        tfile.write(uploaded_file.read())
+
+        cap = cv2.VideoCapture(tfile.name)
+
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        frame_size = (width, height)
+
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v') #codec
+        out = cv2.VideoWriter(output_video_file, fourcc, fps, frame_size)
+        
+        vr = VideoReader(tfile.name)
+        print(tfile.name)
+        ip_video = st.sidebar.video(tfile.name) 
+
+        poseProcess = ProcessFrame(data=angle_data, form_data=form_data)
+
+        print(vr)
+        
+        for frame in vr[:]:
+        
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            processed_frame, _ = poseProcess.process(frame, pose)
+            
+            stframe.image(processed_frame)
+            
+            out.write(processed_frame)
+
+        # process_video(vr, out)
+
+        out.release()
+        stframe.empty()
+        ip_video.empty()
+        tfile.close()
+
+        txt = st.sidebar.markdown(ip_vid_str, unsafe_allow_html=True)   
+        ip_video = st.sidebar.video(output_video_file) 
+
+    except Exception as e:
+        # If the file is not an image, show an error message
+        st.error("Something went wrong. Please try uploading another video file.")
+        print(e)
+else:
+    # If no file is uploaded, show a warning message
+    st.warning("Please upload a video file")
+
+if os.path.exists(output_video_file):
+    with open(output_video_file, 'rb') as op_vid:
+        download = download_button.download_button('Download Video', data = op_vid, file_name='output_recorded.mp4')
+
+if download:
+    st.session_state['download'] = True
+
+
+
+if os.path.exists(output_video_file) and st.session_state['download']:
+    os.remove(output_video_file)
+    st.session_state['download'] = False
+    download_button.empty()
+
+
