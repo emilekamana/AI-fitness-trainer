@@ -1,5 +1,5 @@
-import cv2
 import mediapipe as mp
+import cv2
 import numpy as np
 import tensorflow as tf
 import pandas as pd
@@ -7,7 +7,7 @@ import mediapipe as mp
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
-model = tf.keras.models.load_model("../models/workout_prediction_model.h5")
+model = tf.keras.models.load_model("./models/workout_prediction_model.h5")
 
 def calculate_angle(a,b,c):
     a = np.array(a) # First
@@ -119,8 +119,8 @@ def draw_text(
     return text_size
 
 def get_joint_csv_data():
-    rep_angles_file_path = "../data/rep_angles-Table 1.csv"
-    form_correction_file_path = "../data/form_correction-Table 1.csv"
+    rep_angles_file_path = "./data/rep_angles-Table 1.csv"
+    form_correction_file_path = "./data/form_correction-Table 1.csv"
 
     angle_data = pd.read_csv(rep_angles_file_path, encoding='UTF-8')
     form_data = pd.read_csv(form_correction_file_path, encoding='UTF-8')

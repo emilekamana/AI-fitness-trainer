@@ -6,7 +6,7 @@ from streamlit_webrtc import VideoHTMLAttributes, webrtc_streamer
 from aiortc.contrib.media import MediaRecorder
 
 
-BASE_DIR = os.path.abspath(os.path.join(__file__, '../../'))
+BASE_DIR = os.path.abspath(os.path.join(__file__, './web/'))
 sys.path.append(BASE_DIR)
 
 
