@@ -6,9 +6,6 @@ import sys
 from videoreader import VideoReader
 # from utils import process_video
 
-BASE_DIR = os.path.abspath(os.path.join(__file__, './web/'))
-sys.path.append(BASE_DIR)
-
 from utils import get_mediapipe_pose, get_joint_csv_data
 from process_frame import ProcessFrame
 
