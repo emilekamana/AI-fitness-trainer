@@ -1,5 +1,5 @@
 # FitKam: AI fitness trainer
-#### Web applcation that counts repettions, analyses your form and provides feedback while your exercising
+#### Web applcation that counts repetitions, analyses your form and provides feedback while you're exercising
 #### By **Kamana Izere Emile**
 ## Description
 The app uses computer vision to analyse every frame of the video. It passes the frame to a classification model to predict the exercise you're doing. And using the mediapipe hollistic mode, gets the joint positions necessary to check them against set thresholds to ensure you're in the valid range of motion
